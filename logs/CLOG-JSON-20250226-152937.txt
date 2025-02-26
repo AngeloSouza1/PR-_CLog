@@ -1,0 +1,38 @@
+{
+  "identifier": "90a83c39-ea34-4391-b1d6-fa95c31f0abc",
+  "amount": 9.0,
+  "client": {
+    "phone": "(12) 98845-7047",
+    "name": "Angelo Souza",
+    "document": "41590771028",
+    "email": "angeloafdesouza@gmai.com"
+  },
+  "clientIp": "127.0.0.1",
+  "shippingFee": 0,
+  "discount": 1.1,
+  "shipping": {
+    "address": {
+      "street": "",
+      "streetNumber": "",
+      "complement": "",
+      "zipCode": "",
+      "neighborhood": "",
+      "city": "",
+      "state": "",
+      "country": "br"
+    }
+  },
+  "callbackUrl": "https://8557-45-163-228-129.ngrok-free.app/api/v1/webhook/mppagamentos/payments",
+  "products": [
+    {
+      "id": "48a21150-b00f-4ffe-a7fa-98b1e80afceb",
+      "description": "Produto Y",
+      "price": 10.1,
+      "name": "Produto Y",
+      "physical": false,
+      "quantity": 1
+    }
+  ],
+  "paymentMethod": "pix",
+  "installments": 1
+}
