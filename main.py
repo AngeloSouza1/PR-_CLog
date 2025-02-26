@@ -4,6 +4,7 @@ import re
 import time
 import tkinter as tk
 from tkinter import messagebox, scrolledtext
+import webbrowser
 
 # Função para processar JSON e Headers do log
 def processar_json(log_text):
@@ -25,6 +26,34 @@ def processar_json(log_text):
             return None, headers
     return None, headers
 
+# Função para extrair URL do log
+def extrair_url(log_text):
+    url_match = re.search(r'URL:\s*(https?://[^\s]+)', log_text)
+    return url_match.group(1) if url_match else None
+
+def mostrar_url():
+    log_text = log_input.get("1.0", tk.END).strip()
+    if not log_text:
+        messagebox.showwarning("Aviso", "⚠️ Nenhum log inserido!")
+        return
+
+    url_extraida = extrair_url(log_text)
+    if url_extraida:
+        url_label.config(text=url_extraida, fg="lightblue", cursor="hand2")
+        url_label.bind("<Button-1>", copiar_url)  # Copiar ao clicar
+    else:
+        messagebox.showinfo("URL", "Nenhuma URL encontrada no log.")
+        
+# Função para copiar a URL extraída para a área de transferência
+def copiar_url(event):
+    url = url_label.cget("text")
+    if url:
+        root.clipboard_clear()
+        root.clipboard_append(url)
+        root.update()
+        messagebox.showinfo("Copiado", "📋 URL copiada para a área de transferência!")
+        
+        
 # Função para gerar comando cURL baseado no JSON processado e nos headers extraídos
 def gerar_curl(json_data, headers):
     if not json_data:
@@ -124,6 +153,8 @@ def limpar_campos():
 
     json_output.config(state=tk.DISABLED)
     curl_output.config(state=tk.DISABLED)
+    
+    url_label.config(text="")
 
 # Criando a janela principal
 root = tk.Tk()
@@ -158,6 +189,9 @@ btn_processar.pack(side=tk.LEFT, padx=10, pady=8)
 
 btn_salvar = criar_botao(menu_frame, "💾 Salvar", salvar_arquivos)
 btn_salvar.pack(side=tk.LEFT, padx=10)
+
+btn_mostrar_url = criar_botao(menu_frame, "🔗 Mostrar URL", mostrar_url)
+btn_mostrar_url.pack(side=tk.LEFT, padx=10)
 
 btn_limpar = criar_botao(menu_frame, "🗑️ Limpar", limpar_campos)
 btn_limpar.pack(side=tk.LEFT, padx=10)
@@ -215,6 +249,12 @@ btn_copiar_curl.pack(side=tk.RIGHT, padx=5)
 curl_output = scrolledtext.ScrolledText(curl_frame, wrap=tk.WORD, font=("Courier", 10))
 curl_output.pack(fill=tk.BOTH, expand=True, padx=5, pady=3)
 curl_output.config(state=tk.DISABLED)
+
+# Criando o label para exibir e copiar a URL extraída
+url_label = tk.Label(root, text="", fg="white", bg="#2C3E50", font=("Arial", 12, "bold"))
+url_label.grid(row=3, column=0, columnspan=2, pady=5)
+
+
 
 # Rodando a aplicação
 root.mainloop()
